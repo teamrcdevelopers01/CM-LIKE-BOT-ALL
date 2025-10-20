@@ -3,6 +3,10 @@
 #YOUTUBE CHANNEL 👉 MODA OF CM HACK
 #ANY ISHU CONTACT OWNER - @rc_team_01 [ CM ]
 import telegram
+# VERSION 2 - FINAL FIX
+import telegram
+from telegram.ext import Application, CommandHandler, ContextTypes
+# ... बाकी का सारा कोड वैसा ही रहेगा
 from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandler, filters
 from telegram import Update
 import requests
