@@ -26,6 +26,7 @@ db = TinyDB('db.json')
 users_table = db.table('users')
 config_table = db.table('config')
 groups_table = db.table('groups') # Groups ke liye naya table
+groups_table = db.table('groups') # Groups ke liye naya table
 
 # --- API Configuration --- 🌐
 API_URLS = {
