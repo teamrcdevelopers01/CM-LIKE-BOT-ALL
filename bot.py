@@ -60,13 +60,22 @@ async def is_owner(update: Update):
 
 # --- API Interaction --- 📡
 async def call_api(uid, api_url):
+    """📞 Calls the like API"""
     try:
-        response = requests.get(f"{api_url}/{uid}")
+        # यह सुनिश्चित करता है कि URL हमेशा सही हो
+        if not api_url.startswith(('http://', 'https://')):
+            api_url = f"https://{api_url}"
+
+        full_url = f"{api_url.rstrip('/')}/{uid}"
+        print(f"Calling API: {full_url}") # <-- यह लाइन हमें बताएगी कि सही URL बन रहा है या नहीं
+
+        response = requests.get(full_url)
         response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
         print(f"Error calling API for UID {uid}: {e}")
         return {"status": "error", "message": str(e)}
+
 
 # --- Bot User Commands --- 🤖
 
