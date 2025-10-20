@@ -1,30 +1,37 @@
 from flask import Flask
-import threading
 from waitress import serve
+import threading
 import os
-
-# यह सुनिश्चित करता है कि main() फंक्शन को इम्पोर्ट किया जा सकता है
-if __name__ != '__main__':
-    from bot import main as bot_main
+import time
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    """यह UptimeRobot को बताने के लिए है कि बॉट जिंदा है।"""
-    return "Bot is alive and running!"
+    """यह UptimeRobot को बताता है कि सर्वर चल रहा है।"""
+    return "Bot is alive!"
 
 def run_bot():
-    """यह फंक्शन bot.py के main फंक्शन को चलाएगा।"""
-    # यहाँ हम bot.py से main फंक्शन को कॉल करते हैं
-    # यह कोड केवल तभी चलेगा जब यह फ़ाइल सीधे न चलाई जा रही हो
-    if 'bot_main' in globals():
-        bot_main()
+    """यह फंक्शन bot.py को इम्पोर्ट करके चलाता है।"""
+    print("Bot thread शुरू हो रहा है...")
+    time.sleep(2) # सर्वर को स्थिर होने के लिए 2 सेकंड दें
+    try:
+        # bot.py से main फंक्शन को यहीं पर इम्पोर्ट करें
+        from bot import main
+        print("Bot सफलतापूर्वक इम्पोर्ट हो गया। अब बॉट शुरू हो रहा है...")
+        main()
+    except Exception as e:
+        # अगर बॉट में कोई एरर आता है, तो उसे लॉग में दिखाएं
+        print("!!!!!! BOT THREAD में एक एरर आया !!!!!!")
+        print(f"ERROR: {e}")
 
 if __name__ == '__main__':
-    # बॉट को एक अलग थ्रेड में शुरू करें ताकि वेब सर्वर ब्लॉक न हो
+    # बॉट को एक अलग थ्रेड में शुरू करें
     bot_thread = threading.Thread(target=run_bot, daemon=True)
     bot_thread.start()
-    
-    # Waitress सर्वर का उपयोग करें जो gunicorn से बेहतर काम करता है
-    serve(app, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+
+    # Waitress का उपयोग करके वेब सर्वर शुरू करें
+    port = int(os.environ.get('PORT', 10000))
+    print(f"वेब सर्वर Port {port} पर शुरू हो रहा है...")
+    serve(app, host='0.0.0.0', port=port)
+
